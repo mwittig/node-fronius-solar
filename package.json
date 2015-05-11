@@ -1,0 +1,32 @@
+{
+  "name": "node-fronius-solar",
+  "version": "0.0.1",
+  "description": "Access PV live logs using the Fronius Solar API",
+  "author": {
+    "name": "Marcus Wittig",
+    "url": "https://github.com/mwittig/node-fronius-solar"
+  },
+  "main": "index",
+  "homepage": "https://github.com/mwittig/node-fronius-solar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mwittig/node-fronius-solar"
+  },
+  "bugs": {
+    "url": "https://github.com/mwittig/node-fronius-solar/issues"
+  },
+  "keywords": [
+    "Fronius",
+    "Solar API",
+    "Photovoltaics",
+    "SmartHome",
+    "SmartMeter",
+    "Volkszaehler",
+    "Monitoring"
+  ],
+  "dependencies": {
+    "bluebird": ">=2.9.24",
+    "lodash": ">=3.8.0"
+  }
+}
