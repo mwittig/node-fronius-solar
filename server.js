@@ -6,7 +6,7 @@ var http = require("http"),
 http.createServer(function(request, response) {
 
     var uri = url.parse(request.url).pathname;
-console.log("uri", uri);
+    console.log("uri", uri);
     if (uri === '/solar_api/v1/GetInverterRealtimeData.cgi') {
         response.writeHead(200, {
             "Content-Type": "application/json; charset=ISO-8859-1"
