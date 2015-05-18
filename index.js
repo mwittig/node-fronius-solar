@@ -19,15 +19,15 @@ function consoleDebug() {
 function getRequest(options) {
     var id = options.deviceId || DEFAULT_DEVICE_ID,
         requestOptions = _.assign({
-        deviceId: DEFAULT_DEVICE_ID,
-        timeout: 20000,
-        rejectUnauthorized: false,
-        protocol: 'http:',
-        path: '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData',
-        headers: {},
-        method: 'GET'
-    }, options),
-    timeoutOccurred = false;
+            deviceId: DEFAULT_DEVICE_ID,
+            timeout: 20000,
+            rejectUnauthorized: false,
+            protocol: 'http:',
+            path: '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData',
+            headers: {},
+            method: 'GET'
+        }, options),
+        timeoutOccurred = false;
 
     requestOptions.headers['Host'] = requestOptions.host;
     if (!_.isUndefined(requestOptions.username) && !_.isUndefined(requestOptions.password)) {
@@ -65,7 +65,14 @@ function getRequest(options) {
                     debug("END");
                     try {
                         var json = JSON.parse(data);
-                        return resolve(json);
+                        if (_.has(json, 'Head') && _.has(json, 'Body')) {
+                            return resolve(json);
+                        }
+                        else {
+                            var error = new Error("Invalid response body format: Head and Body expected");
+                            debug('ERROR:' + 'Host ' + requestOptions.host + ' ' + error);
+                            return reject(error);
+                        }
                     }
                     catch (e) {
                         var error = new Error("Invalid response body: " + e.toString());

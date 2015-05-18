@@ -1,6 +1,6 @@
 {
   "name": "node-fronius-solar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Access PV live logs using the Fronius Solar API",
   "author": {
     "name": "Marcus Wittig",

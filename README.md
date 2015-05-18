@@ -27,3 +27,6 @@ Access PV live logs using the Fronius Solar API. Work in progress.
     * Improved error handling
     * Added support for HTTPS, added rejectUnauthorized: false to allow self-signed server certs. Should be set to true
       if server has a certificate signed from a trusted CA
+
+* 20150518, V0.0.3
+    * Improved error handling
