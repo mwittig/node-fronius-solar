@@ -16,6 +16,10 @@ function consoleDebug() {
     console.log.apply(this, arguments)
 }
 
+function settlePromise(aPromise) {
+    return aPromise.reflect();
+}
+
 function getRequest(options) {
     var id = options.deviceId || DEFAULT_DEVICE_ID,
         requestOptions = _.assign({
@@ -112,7 +116,7 @@ function checkRequiredProperties(options, requiredPropsArray) {
 
 module.exports.GetInverterRealtimeData = function (options) {
     return checkRequiredProperties(options, ['host', 'deviceId']).then(function () {
-        return lastRequest = Promise.settle([lastRequest]).then(function () {
+        return lastRequest = settlePromise(lastRequest).then(function () {
             return getRequest(options).then(function (json) {
                 return Promise.resolve(json);
             })
