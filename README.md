@@ -1,5 +1,7 @@
 # node-fronius-solar
 
+[![Build Status](https://travis-ci.org/mwittig/node-fronius-solar.svg?branch=master)](https://travis-ci.org/mwittig/node-fronius-solar)
+
 Access PV live logs using the Fronius Solar API. Work in progress.
 
 ## Usage Example
@@ -30,3 +32,8 @@ Access PV live logs using the Fronius Solar API. Work in progress.
 
 * 20150518, V0.0.3
     * Improved error handling
+    
+* 20160305, V0.0.4
+    * Updated dependencies
+    * Replaced deprecated usage of Promise.settle() function
+    * Added travis build descriptor
