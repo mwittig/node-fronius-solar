@@ -5,9 +5,9 @@ var http = require("http"),
 
 http.createServer(function(request, response) {
 
-    var uri = url.parse(request.url).pathname;
-    console.log("uri", uri);
-    if (uri === '/solar_api/v1/GetInverterRealtimeData.cgi') {
+    var requestUrl = url.parse(request.url);
+    console.log("Request URL path", requestUrl.path);
+    if (requestUrl.pathname === '/solar_api/v1/GetInverterRealtimeData.cgi') {
         response.writeHead(200, {
             "Content-Type": "application/json; charset=ISO-8859-1"
         });
@@ -72,6 +72,79 @@ http.createServer(function(request, response) {
                             "LEDColor": 2,
                             "LEDState": 0,
                             "StateToReset": false
+                        }
+                    }
+                }
+            }
+        ));
+        return;
+    }
+    else if (requestUrl.path === '/components/5/0/?print=names') {
+        response.writeHead(200, {
+            "Content-Type": "application/json; charset=ISO-8859-1"
+        });
+        response.end(JSON.stringify(
+            {
+                "Head": {
+                    "RequestArguments": {
+                        "resource": "5\/0\/",
+                        "print": "names"
+                    },
+                    "Status": {
+                        "Code": 0,
+                        "Reason": "",
+                        "UserMessage": "",
+                        "ErrorDetail": {
+                            "Nodes": []
+                        }
+                    },
+                    "Timestamp": "2016-02-25T11:23:46+01:00"
+                },
+                "Body": {
+                    "Data": {
+                        "TimeStamp": {
+                            "value": 1456395825,
+                            "unit": "sec"
+                        },
+                        "Enable": {
+                            "value": 1,
+                            "unit": "1"
+                        },
+                        "Visible": {
+                            "value": 1,
+                            "unit": "1"
+                        },
+                        "Power_P_Generate": {
+                            "value": 629,
+                            "unit": "W"
+                        },
+                        "Power_P_Load": {
+                            "value": -2883.25,
+                            "unit": "W"
+                        },
+                        "Power_P_Grid": {
+                            "value": 2254.25,
+                            "unit": "W"
+                        },
+                        "Power_Akku_Sum": {
+                            "value": null,
+                            "unit": "W"
+                        },
+                        "Power_PV_Sum": {
+                            "value": 629,
+                            "unit": "W"
+                        },
+                        "Relative_Current_SelfConsumption": {
+                            "value": 100,
+                            "unit": "%"
+                        },
+                        "Relative_Current_Autonomy": {
+                            "value": 21.815659,
+                            "unit": "%"
+                        },
+                        "Power_P_SelfConsumption": {
+                            "value": -629,
+                            "unit": "W"
                         }
                     }
                 }

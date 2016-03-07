@@ -20,14 +20,14 @@ function settlePromise(aPromise) {
     return aPromise.reflect();
 }
 
-function getRequest(options) {
+function getRequest(options, path) {
     var id = options.deviceId || DEFAULT_DEVICE_ID,
         requestOptions = _.assign({
             deviceId: DEFAULT_DEVICE_ID,
             timeout: 20000,
             rejectUnauthorized: false,
             protocol: 'http:',
-            path: '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData',
+            path: path || '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData',
             headers: {},
             method: 'GET'
         }, options),
@@ -124,3 +124,14 @@ module.exports.GetInverterRealtimeData = function (options) {
     })
 };
 
+// GetComponentsData is provided to use an undocumented API service provided by the data logger
+// of the Symo inverters. See https://forum.fhem.de/index.php/topic,24614.msg214011.html#msg214011
+module.exports.GetComponentsData = function (options) {
+    return checkRequiredProperties(options, ['host']).then(function () {
+        return lastRequest = settlePromise(lastRequest).then(function () {
+            return getRequest(options, '/components/5/0/?print=names').then(function (json) {
+                return Promise.resolve(json);
+            })
+        })
+    })
+};
