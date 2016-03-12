@@ -1,13 +1,26 @@
+"use strict";
+
 var http = require("http"),
     url = require("url"),
     path = require("path"),
-    port = process.argv[2] || 8001;
+    port = process.argv[2] || 8001,
+    resourcePaths = {
+        REALTIME_DATA: '/solar_api/v1/GetInverterRealtimeData.cgi',
+        COMPONENTS: '/components/5/0/?print=names'
+    };
+
+function normalize(path) {
+    // do some minimal normalization of the URL path
+    return path.replace(/\/{2,}/, '/')
+}
 
 http.createServer(function(request, response) {
 
     var requestUrl = url.parse(request.url);
     console.log("Request URL path", requestUrl.path);
-    if (requestUrl.pathname === '/solar_api/v1/GetInverterRealtimeData.cgi') {
+
+    if (normalize(requestUrl.pathname) === resourcePaths.REALTIME_DATA) {
+        console.log("200 OK");
         response.writeHead(200, {
             "Content-Type": "application/json; charset=ISO-8859-1"
         });
@@ -79,7 +92,8 @@ http.createServer(function(request, response) {
         ));
         return;
     }
-    else if (requestUrl.path === '/components/5/0/?print=names') {
+    else if (normalize(requestUrl.path) === resourcePaths.COMPONENTS) {
+        console.log("200 OK");
         response.writeHead(200, {
             "Content-Type": "application/json; charset=ISO-8859-1"
         });
@@ -153,6 +167,7 @@ http.createServer(function(request, response) {
         return;
     }
     else {
+        console.log("404 Not Found");
         response.writeHead(404, {"Content-Type": "text/plain"});
         response.write("404 Not Found\n");
         response.end();
