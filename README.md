@@ -44,3 +44,9 @@ Access PV live logs using the Fronius Solar API. Work in progress.
     * Updated dependencies
     * Replaced deprecated usage of Promise.settle() function
     * Added travis build descriptor
+    
+* 20160318, V0.0.5
+    * Added GetComponentsData for using an undocumented API service provided by the data logger 
+      of the Symo inverters. Issue #1
+    * Moved server.js to 'test' directory as a starting pointed for automating testing
+    * Updated dependencies
