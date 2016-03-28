@@ -3,18 +3,22 @@
 var http = require("http"),
     url = require("url"),
     path = require("path"),
+    auth = require('http-auth'),
+    crypto = require('crypto'),
     port = process.argv[2] || 8001,
     resourcePaths = {
         REALTIME_DATA: '/solar_api/v1/GetInverterRealtimeData.cgi',
         COMPONENTS: '/components/5/0/?print=names'
-    };
+    },
+    realm = "PV Data Logger",
+    useDigestAuth = true;
 
 function normalize(path) {
     // do some minimal normalization of the URL path
     return path.replace(/\/{2,}/, '/')
 }
 
-http.createServer(function(request, response) {
+var requestListener = function(request, response) {
 
     var requestUrl = url.parse(request.url);
     console.log("Request URL path", requestUrl.path);
@@ -173,6 +177,25 @@ http.createServer(function(request, response) {
         response.end();
         return;
     }
-}).listen(parseInt(port, 10));
+}
+
+if (useDigestAuth) {
+    var digest = auth.digest({
+            realm: realm
+        }, function (username, callback) { // Expecting md5(username:realm:password) in callback.
+            if (username === "admin") {
+                var hash = crypto.createHash('md5');
+                hash.update("admin:" + realm + ":admin");
+                callback(hash.digest('hex'));
+            } else {
+                callback();
+            }
+        }
+    );
+    http.createServer(digest, requestListener).listen(parseInt(port, 10));
+}
+else {
+    http.createServer(requestListener).listen(parseInt(port, 10));
+}
 
 console.log("Server running at\n  => http://localhost:" + parseInt(port, 10) + "/\nCTRL + C to shutdown");

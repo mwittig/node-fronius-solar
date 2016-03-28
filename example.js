@@ -1,6 +1,8 @@
 var fronius = require('./index'),
     util = require('util'),
     options = {
+        username: "admin",
+        password: "admin",
         host: 'localhost',
         port: 8001,
         deviceId: '1'

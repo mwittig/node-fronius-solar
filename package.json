@@ -27,6 +27,10 @@
   ],
   "dependencies": {
     "bluebird": "^3.3.4",
+    "http-digest-client": "git+https://github.com/mwittig/node-http-digest-client.git#59830296f101b89e559be1ef778bc88dc64e435d",
     "lodash": "^4.6.1"
+  },
+  "devDependencies": {
+    "http-auth": "^2.2.8"
   }
 }

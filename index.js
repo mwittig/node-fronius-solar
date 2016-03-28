@@ -34,17 +34,24 @@ function getRequest(options, path) {
         timeoutOccurred = false;
 
     requestOptions.headers['Host'] = requestOptions.host;
-    if (!_.isUndefined(requestOptions.username) && !_.isUndefined(requestOptions.password)) {
-        requestOptions.headers['Authorization'] =
-            "Basic " + new Buffer(requestOptions.username + ":" + requestOptions.password).toString("base64");
-    }
+    //if (!_.isUndefined(requestOptions.username) && !_.isUndefined(requestOptions.password)) {
+    //    requestOptions.headers['Authorization'] =
+    //        "Basic " + new Buffer(requestOptions.username + ":" + requestOptions.password).toString("base64");
+    //}
 
     debug('REQUEST OPTIONS: ' + JSON.stringify(requestOptions));
 
     return new Promise(function (resolve, reject) {
-        var data = "",
-            proto = (requestOptions.protocol == 'https:') ? https : http,
-            getReq = proto.request(requestOptions, function (response) {
+        var data = "";
+        var proto = (requestOptions.protocol == 'https:') ? https : http;
+        if  (requestOptions.username != null) {
+            proto = require('http-digest-client')(
+                requestOptions.username,
+                requestOptions.password,
+                (requestOptions.protocol == 'https:')
+            );
+        }
+        var getReq = proto.request(requestOptions, function (response) {
                 debug('STATUS: ' + response.statusCode);
                 debug('HEADERS: ' + JSON.stringify(response.headers));
 
