@@ -8,13 +8,14 @@ var http = require("http"),
     port = process.argv[2] || 8001,
     resourcePaths = {
         REALTIME_DATA: '/solar_api/v1/GetInverterRealtimeData.cgi',
-        COMPONENTS: '/components/5/0/?print=names'
+        COMPONENTS: '/components/5/0/?print=names',
+        POWER_FLOW_REALTIME_DATA: '/solar_api/v1/GetPowerFlowRealtimeData.fcgi'
     },
     realm = "PV Data Logger",
     useDigestAuth = true;
 
 function normalize(path) {
-    // do some minimal normalization of the URL path
+    // do some minimal normalization of the URL path, i.e. remove double slashes
     return path.replace(/\/{2,}/, '/')
 }
 
@@ -163,6 +164,46 @@ var requestListener = function(request, response) {
                         "Power_P_SelfConsumption": {
                             "value": -629,
                             "unit": "W"
+                        }
+                    }
+                }
+            }
+        ));
+        return;
+    }
+    else if (normalize(requestUrl.path) === resourcePaths.POWER_FLOW_REALTIME_DATA) {
+        console.log("200 OK");
+        response.writeHead(200, {
+            "Content-Type": "application/json; charset=ISO-8859-1"
+        });
+        response.end(JSON.stringify(
+            {
+                "Head" : {
+                    "RequestArguments" : {},
+                    "Status" : {
+                        "Code" : 0,
+                        "Reason" : "",
+                        "UserMessage" : ""
+                    },
+                    "Timestamp" : "2016-03-25T15:19:21+01:00"
+                },
+                "Body" : {
+                    "Data" : {
+                        "Site" : {
+                            "Mode" : "produce-only",
+                            "P_Grid" : null,
+                            "P_Load" : null,
+                            "P_Akku" : null,
+                            "P_PV" : 291,
+                            "E_Day" : 7653,
+                            "E_Year" : 841228,
+                            "E_Total" : 7978902
+                        },
+                        "Inverters" : {
+                            "1" : {
+                                "DT" : 110,
+                                "P" : 291
+                            }
                         }
                     }
                 }

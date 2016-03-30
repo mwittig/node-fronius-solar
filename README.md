@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mwittig/node-fronius-solar.svg?branch=master)](https://travis-ci.org/mwittig/node-fronius-solar)
 
-Access PV live logs using the Fronius Solar API. Work in progress.
+Access PV live logs using the Fronius Solar API V0 and V1.
 
 ## Usage Example
 
@@ -15,38 +15,35 @@ Access PV live logs using the Fronius Solar API. Work in progress.
         },
         x = Date.now();
     
+    // This is Solar API V0 call which should work with Fronius Datalogger Web v2.0.4.1 (and higer) and
+    // Fronius Data Manager v3.0.3-1 and higher
     fronius.GetInverterRealtimeData(options).then(function (json) {
         console.log(util.inspect(json, { depth: 4, colors : true }));
         console.log(Date.now() - x, "milliseconds elapsed")
     }).catch(function(e) {console.log(e)});
     
     // GetComponentsData is provided to use an undocumented API service provided by the data logger
-    // of the Symo inverters. See https://forum.fhem.de/index.php/topic,24614.msg214011.html#msg214011 
+    // of the Symo inverters. See https://forum.fhem.de/index.php/topic,24614.msg214011.html#msg214011
+    // In contrast to the regular Solar API Calls which do not require authentication, you may need to provide
+    // username and password properties to the options dictionary (if authentication has been enabled 
+    // for Fronius Data Manager.
     fronius.GetComponentsData(options).then(function (json) {
         console.log(util.inspect(json, { depth: 4, colors : true }));
         console.log(Date.now() - x, "milliseconds elapsed")
     }).catch(function(e) {console.log(e)});
-
-## History
-
-* 20150512, V0.0.1
-    * Initial Version
-
-* 20150514, V0.0.2
-    * Improved error handling
-    * Added support for HTTPS, added rejectUnauthorized: false to allow self-signed server certs. Should be set to true
-      if server has a certificate signed from a trusted CA
-
-* 20150518, V0.0.3
-    * Improved error handling
     
-* 20160305, V0.0.4
-    * Updated dependencies
-    * Replaced deprecated usage of Promise.settle() function
-    * Added travis build descriptor
-    
-* 20160318, V0.0.5
-    * Added GetComponentsData for using an undocumented API service provided by the data logger 
-      of the Symo inverters. Issue #1
-    * Moved server.js to 'test' directory as a starting pointed for automating testing
-    * Updated dependencies
+    // This is a Solar API V1 call which should work with Fronius Data Manager v3.4.2-1 and higher
+    fronius.GetPowerFlowRealtimeDataData(options).then(function (json) {
+        console.log(util.inspect(json, { depth: 4, colors : true }));
+        console.log(Date.now() - x, "milliseconds elapsed")
+    }).catch(function(e) {console.log(e)});
+
+## Release History
+
+See [Release History](https://github.com/mwittig/node-fronius-solar/blob/master/HISTORY.md).
+
+## License
+
+Copyright (c) 2016, Marcus Wittig and contributors. All rights reserved.
+
+[MIT License](https://github.com/mwittig/node-fronius-solar/blob/master/LICENSE).

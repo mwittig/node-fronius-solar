@@ -142,3 +142,13 @@ module.exports.GetComponentsData = function (options) {
         })
     })
 };
+
+module.exports.GetPowerFlowRealtimeDataData = function (options) {
+    return checkRequiredProperties(options, ['host']).then(function () {
+        return lastRequest = settlePromise(lastRequest).then(function () {
+            return getRequest(options, '/solar_api/v1/GetPowerFlowRealtimeData.fcgi').then(function (json) {
+                return Promise.resolve(json);
+            })
+        })
+    })
+};
