@@ -28,3 +28,4 @@
     * Added GetPowerFlowRealtimeDataData() Solar API V1 service call
     * Moved release history to separate file
     * Added license info to README
+    * Updated dependencies
