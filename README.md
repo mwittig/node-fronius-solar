@@ -22,8 +22,8 @@ Access PV live logs using the Fronius Solar API V0 and V1.
         console.log(Date.now() - x, "milliseconds elapsed")
     }).catch(function(e) {console.log(e)});
     
-    // GetComponentsData is provided to use an undocumented API service provided by the Fronius Data Manager
-    // prrovided with the Symo inverters. See https://forum.fhem.de/index.php/topic,24614.msg214011.html#msg214011
+    // GetComponentsData is provided to use an undocumented API service of the Fronius Data Manager
+    // provided with the Symo inverters. See https://forum.fhem.de/index.php/topic,24614.msg214011.html#msg214011
     // In contrast to the regular Solar API Calls which do not require authentication, you may need to provide
     // username and password properties to the options dictionary (if authentication has been enabled 
     // for Fronius Data Manager.
