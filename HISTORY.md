@@ -28,3 +28,6 @@
     * Added GetPowerFlowRealtimeDataData() Solar API V1 service call
     * Moved release history to separate file
     * Added license info to README
+
+* 20160601, V0.0.7
+    * Added basic support for V0 GetInverterRealtimeData
