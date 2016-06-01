@@ -37,7 +37,7 @@ function getRequest(options, path) {
         timeout: 20000,
         rejectUnauthorized: false,
         protocol: 'http:',
-        path: path || '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData',
+        path: urlPath,
         headers: {},
         method: 'GET'
     }, options);
