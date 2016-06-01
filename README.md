@@ -11,12 +11,20 @@ Access PV live logs using the Fronius Solar API V0 and V1.
         options = {
             host: 'localhost',
             port: 8001,
-            deviceId: '1'
+            deviceId: 1
+            version: 0
         },
         x = Date.now();
     
-    // This is Solar API V0 call which should work with Fronius Datalogger Web v2.0.4.1 (and higher) and
+    // This is the Solar API V0 call which should work with Fronius Datalogger Web v2.0.4.1 (and higher) and
     // Fronius Data Manager v3.0.3-1 (and higher)
+    fronius.GetInverterRealtimeData(options).then(function (json) {
+        console.log(util.inspect(json, { depth: 4, colors : true }));
+        console.log(Date.now() - x, "milliseconds elapsed")
+    }).catch(function(e) {console.log(e)});
+    
+    // This is the Solar API V1
+    options.version = 1;
     fronius.GetInverterRealtimeData(options).then(function (json) {
         console.log(util.inspect(json, { depth: 4, colors : true }));
         console.log(Date.now() - x, "milliseconds elapsed")

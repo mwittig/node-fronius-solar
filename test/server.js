@@ -7,13 +7,14 @@ var http = require("http"),
     crypto = require('crypto'),
     port = process.argv[2] || 8001,
     resourcePaths = {
+        REALTIME_DATA_V0: '/solar_api/GetInverterRealtimeData.cgi',
         REALTIME_DATA: '/solar_api/v1/GetInverterRealtimeData.cgi',
         COMPONENTS: '/components/5/0/?print=names',
         POWER_FLOW_REALTIME_DATA: '/solar_api/v1/GetPowerFlowRealtimeData.fcgi'
     },
     realm = "PV Data Logger",
     useDigestAuth = true;
-
+//solar_api/GetInverterRealtimeData.cgi?Scope=Device&DeviceIndex=1&DataCollection=CommonInverterData
 function normalize(path) {
     // do some minimal normalization of the URL path, i.e. remove double slashes
     return path.replace(/\/{2,}/, '/')
@@ -24,7 +25,80 @@ var requestListener = function(request, response) {
     var requestUrl = url.parse(request.url);
     console.log("Request URL path", requestUrl.path);
 
-    if (normalize(requestUrl.pathname) === resourcePaths.REALTIME_DATA) {
+    if (normalize(requestUrl.pathname) === resourcePaths.REALTIME_DATA_V0) {
+        console.log("200 OK");
+        response.writeHead(200, {
+            "Content-Type": "application/json; charset=ISO-8859-1"
+        });
+        response.end(JSON.stringify(
+            {
+                "Head" : {
+                    "RequestArguments" : {
+                        "DataCollection" : "CommonInverterData",
+                        "DeviceClass" : "Inverter",
+                        "DeviceIndex" : "1",
+                        "Scope" : "Device"
+                    },
+                    "Status" : {
+                        "Code" : 0,
+                        "Reason" : "",
+                        "UserMessage" : ""
+                    },
+                    "Timestamp" : "2016-06-01T15:31:47+02:00"
+                },
+                "Body" : {
+                    "Data" : {
+                        "DAY_ENERGY" : {
+                            "Value" : 10000,
+                            "Unit" : "Wh"
+                        },
+                        "FAC" : {
+                            "Value" : 49.97,
+                            "Unit" : "Hz"
+                        },
+                        "IAC" : {
+                            "Value" : 8.42,
+                            "Unit" : "A"
+                        },
+                        "IDC" : {
+                            "Value" : 8.48,
+                            "Unit" : "A"
+                        },
+                        "PAC" : {
+                            "Value" : 2021,
+                            "Unit" : "W"
+                        },
+                        "TOTAL_ENERGY" : {
+                            "Value" : 70334000,
+                            "Unit" : "Wh"
+                        },
+                        "UAC" : {
+                            "Value" : 240,
+                            "Unit" : "V"
+                        },
+                        "UDC" : {
+                            "Value" : 253,
+                            "Unit" : "V"
+                        },
+                        "YEAR_ENERGY" : {
+                            "Value" : 3746000,
+                            "Unit" : "Wh"
+                        },
+                        "DeviceStatus" : {
+                            "StatusCode" : 7,
+                            "MgmtTimerRemainingTime" : -1,
+                            "ErrorCode" : 0,
+                            "LEDColor" : 2,
+                            "LEDState" : 0,
+                            "StateToReset" : false
+                        }
+                    }
+                }
+            }
+        ));
+        return;
+    }
+    else if (normalize(requestUrl.pathname) === resourcePaths.REALTIME_DATA) {
         console.log("200 OK");
         response.writeHead(200, {
             "Content-Type": "application/json; charset=ISO-8859-1"

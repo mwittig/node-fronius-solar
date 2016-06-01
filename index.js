@@ -21,17 +21,27 @@ function settlePromise(aPromise) {
 }
 
 function getRequest(options, path) {
-    var id = options.deviceId || DEFAULT_DEVICE_ID,
-        requestOptions = _.assign({
-            deviceId: DEFAULT_DEVICE_ID,
-            timeout: 20000,
-            rejectUnauthorized: false,
-            protocol: 'http:',
-            path: path || '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData',
-            headers: {},
-            method: 'GET'
-        }, options),
-        timeoutOccurred = false;
+    var id = options.deviceId || DEFAULT_DEVICE_ID;
+    var urlPath = path;
+    if (! urlPath) {
+        if (options.version === 0) {
+            urlPath = '/solar_api/GetInverterRealtimeData.cgi?Scope=Device&DeviceIndex=';
+        }
+        else {
+            urlPath = '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=';
+        }
+        urlPath+= id + '&DataCollection=CommonInverterData'
+    }
+    var requestOptions = _.assign({
+        deviceId: DEFAULT_DEVICE_ID,
+        timeout: 20000,
+        rejectUnauthorized: false,
+        protocol: 'http:',
+        path: path || '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData',
+        headers: {},
+        method: 'GET'
+    }, options);
+    var timeoutOccurred = false;
 
     requestOptions.headers['Host'] = requestOptions.host;
     //if (!_.isUndefined(requestOptions.username) && !_.isUndefined(requestOptions.password)) {
@@ -122,9 +132,10 @@ function checkRequiredProperties(options, requiredPropsArray) {
 
 
 module.exports.GetInverterRealtimeData = function (options) {
-    return checkRequiredProperties(options, ['host', 'deviceId']).then(function () {
+    var opts = _.clone(options);
+    return checkRequiredProperties(opts, ['host', 'deviceId']).then(function () {
         return lastRequest = settlePromise(lastRequest).then(function () {
-            return getRequest(options).then(function (json) {
+            return getRequest(opts).then(function (json) {
                 return Promise.resolve(json);
             })
         })
@@ -134,9 +145,10 @@ module.exports.GetInverterRealtimeData = function (options) {
 // GetComponentsData is provided to use an undocumented API service provided by the data logger
 // of the Symo inverters. See https://forum.fhem.de/index.php/topic,24614.msg214011.html#msg214011
 module.exports.GetComponentsData = function (options) {
-    return checkRequiredProperties(options, ['host']).then(function () {
+    var opts = _.clone(options);
+    return checkRequiredProperties(opts, ['host']).then(function () {
         return lastRequest = settlePromise(lastRequest).then(function () {
-            return getRequest(options, '/components/5/0/?print=names').then(function (json) {
+            return getRequest(opts, '/components/5/0/?print=names').then(function (json) {
                 return Promise.resolve(json);
             })
         })
@@ -144,9 +156,10 @@ module.exports.GetComponentsData = function (options) {
 };
 
 module.exports.GetPowerFlowRealtimeDataData = function (options) {
-    return checkRequiredProperties(options, ['host']).then(function () {
+    var opts = _.clone(options);
+    return checkRequiredProperties(opts, ['host']).then(function () {
         return lastRequest = settlePromise(lastRequest).then(function () {
-            return getRequest(options, '/solar_api/v1/GetPowerFlowRealtimeData.fcgi').then(function (json) {
+            return getRequest(opts, '/solar_api/v1/GetPowerFlowRealtimeData.fcgi').then(function (json) {
                 return Promise.resolve(json);
             })
         })
