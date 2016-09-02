@@ -31,6 +31,6 @@
     "lodash": "^4.7.0"
   },
   "devDependencies": {
-    "http-auth": "^2.2.8"
+    "http-auth": "^2.4.5"
   }
 }
