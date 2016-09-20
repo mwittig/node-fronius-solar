@@ -34,3 +34,6 @@
 
 * 20160601, V0.0.8
     * Bug fix for V0 GetInverterRealtimeData
+    
+* 20160921, V0.0.9
+    * Updated dependencies
