@@ -1,8 +1,6 @@
 # node-fronius-solar
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/mwittig/node-fronius-solar.svg)](https://greenkeeper.io/)
-
-[![Build Status](https://travis-ci.org/mwittig/node-fronius-solar.svg?branch=master)](https://travis-ci.org/mwittig/node-fronius-solar)
+[![Greenkeeper badge](https://badges.greenkeeper.io/mwittig/node-fronius-solar.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/mwittig/node-fronius-solar.svg?branch=master)](https://travis-ci.org/mwittig/node-fronius-solar)
 
 Access PV live logs using the Fronius Solar API V0 and V1.
 
