@@ -37,3 +37,7 @@
     
 * 20160921, V0.0.9
     * Updated dependencies
+    
+* 20170929, V0.0.10
+    * Updated dependencies
+    * Added Greenkeeper badge
