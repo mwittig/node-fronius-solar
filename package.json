@@ -26,11 +26,11 @@
     "Monitoring"
   ],
   "dependencies": {
-    "bluebird": "^3.4.6",
+    "bluebird": "^3.5.0",
     "http-digest-client": "git+https://github.com/mwittig/node-http-digest-client.git#d0224a51c5e8b97a2d1dd741f90018bd738762d8",
-    "lodash": "^4.16.1"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "http-auth": "^3.0.1"
+    "http-auth": "^3.2.3"
   }
 }
