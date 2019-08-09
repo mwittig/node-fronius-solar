@@ -4,8 +4,7 @@ var util = require('util'),
     _ = require('lodash'),
     Promise = require('bluebird'),
     lastRequest = Promise.resolve(),
-    debug = process.env.hasOwnProperty('FRONIUS_DEBUG') ? consoleDebug : function () {
-    },
+    debug = process.env.hasOwnProperty('FRONIUS_DEBUG') ? consoleDebug : function () {},
     DEFAULT_DEVICE_ID = 1;
 
 //
@@ -23,14 +22,13 @@ function settlePromise(aPromise) {
 function getRequest(options, path) {
     var id = options.deviceId || DEFAULT_DEVICE_ID;
     var urlPath = path;
-    if (! urlPath) {
+    if (!urlPath) {
         if (options.version === 0) {
             urlPath = '/solar_api/GetInverterRealtimeData.cgi?Scope=Device&DeviceIndex=';
-        }
-        else {
+        } else {
             urlPath = '/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=';
         }
-        urlPath+= id + '&DataCollection=CommonInverterData'
+        urlPath += id + '&DataCollection=CommonInverterData'
     }
     var requestOptions = _.assign({
         deviceId: DEFAULT_DEVICE_ID,
@@ -54,7 +52,7 @@ function getRequest(options, path) {
     return new Promise(function (resolve, reject) {
         var data = "";
         var proto = (requestOptions.protocol == 'https:') ? https : http;
-        if  (requestOptions.username != null) {
+        if (requestOptions.username != null) {
             proto = require('http-digest-client')(
                 requestOptions.username,
                 requestOptions.password,
@@ -62,56 +60,53 @@ function getRequest(options, path) {
             );
         }
         var getReq = proto.request(requestOptions, function (response) {
-                debug('STATUS: ' + response.statusCode);
-                debug('HEADERS: ' + JSON.stringify(response.headers));
+            debug('STATUS: ' + response.statusCode);
+            debug('HEADERS: ' + JSON.stringify(response.headers));
 
-                var error;
-                if (response.statusCode >= 300) {
-                    if (response.statusCode === 401) {
-                        error = new Error("Unauthorized: check username/password");
-                    }
-                    else {
-                        error = new Error("Request failed. HTTP Status Code: " + response.statusCode);
-                    }
-                    debug('ERROR:' + 'Host ' + requestOptions.host + ' ' + error);
-                    return reject(error);
+            var error;
+            if (response.statusCode >= 300) {
+                if (response.statusCode === 401) {
+                    error = new Error("Unauthorized: check username/password");
+                } else {
+                    error = new Error("Request failed. HTTP Status Code: " + response.statusCode);
                 }
+                debug('ERROR:' + 'Host ' + requestOptions.host + ' ' + error);
+                return reject(error);
+            }
 
-                response.setEncoding('utf8');
-                response.on('data', function (result) {
-                    debug("DATA CHUNK", result);
-                    data += result;
-                });
-                response.on('end', function () {
-                    debug("END");
-                    try {
-                        var json = JSON.parse(data);
-                        if (_.has(json, 'Head') && _.has(json, 'Body')) {
-                            return resolve(json);
-                        }
-                        else {
-                            var error = new Error("Invalid response body format: Head and Body expected");
-                            debug('ERROR:' + 'Host ' + requestOptions.host + ' ' + error);
-                            return reject(error);
-                        }
-                    }
-                    catch (e) {
-                        var error = new Error("Invalid response body: " + e.toString());
+            response.setEncoding('utf8');
+            response.on('data', function (result) {
+                debug("DATA CHUNK", result);
+                data += result;
+            });
+            response.on('end', function () {
+                debug("END");
+                try {
+                    var json = JSON.parse(data);
+                    if (_.has(json, 'Head') && _.has(json, 'Body')) {
+                        return resolve(json);
+                    } else {
+                        var error = new Error("Invalid response body format: Head and Body expected");
                         debug('ERROR:' + 'Host ' + requestOptions.host + ' ' + error);
                         return reject(error);
                     }
-                });
-            }).on('error', function (error) {
-                if (timeoutOccurred) {
-                    error = new Error("Request timeout occurred - request aborted");
+                } catch (e) {
+                    var error = new Error("Invalid response body: " + e.toString());
+                    debug('ERROR:' + 'Host ' + requestOptions.host + ' ' + error);
+                    return reject(error);
                 }
-                debug('ERROR:' + 'Host ' + requestOptions.host + ' ' + error);
-                getReq.abort();
-                return reject(error);
-            }).on('timeout', function () {
-                timeoutOccurred = true;
-                getReq.abort();
             });
+        }).on('error', function (error) {
+            if (timeoutOccurred) {
+                error = new Error("Request timeout occurred - request aborted");
+            }
+            debug('ERROR:' + 'Host ' + requestOptions.host + ' ' + error);
+            getReq.abort();
+            return reject(error);
+        }).on('timeout', function () {
+            timeoutOccurred = true;
+            getReq.abort();
+        });
         getReq.setTimeout(requestOptions.timeout);
         getReq.end();
     });
@@ -160,6 +155,30 @@ module.exports.GetPowerFlowRealtimeDataData = function (options) {
     return checkRequiredProperties(opts, ['host']).then(function () {
         return lastRequest = settlePromise(lastRequest).then(function () {
             return getRequest(opts, '/solar_api/v1/GetPowerFlowRealtimeData.fcgi').then(function (json) {
+                return Promise.resolve(json);
+            })
+        })
+    })
+};
+
+module.exports.GetPowerMeterRealtimeData = function (options) {
+    var opts = _.clone(options);
+    opts.scope = "Device";
+    return checkRequiredProperties(opts, ['host', 'deviceId']).then(function () {
+        return lastRequest = settlePromise(lastRequest).then(function () {
+            return getRequest(opts, '/solar_api/v1/GetPowerMeterRealtimeData.fcgi').then(function (json) {
+                return Promise.resolve(json);
+            })
+        })
+    })
+};
+
+module.exports.GetStorageRealtimeData = function (options) {
+    var opts = _.clone(options);
+    opts.scope = "Device";
+    return checkRequiredProperties(opts, ['host', 'deviceId']).then(function () {
+        return lastRequest = settlePromise(lastRequest).then(function () {
+            return getRequest(opts, '/solar_api/v1/GetStorageRealtimeData.fcgi').then(function (json) {
                 return Promise.resolve(json);
             })
         })
