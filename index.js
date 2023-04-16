@@ -150,7 +150,7 @@ module.exports.GetComponentsData = function (options) {
     })
 };
 
-module.exports.GetPowerFlowRealtimeDataData = function (options) {
+module.exports.GetPowerFlowRealtimeData = function (options) {
     var opts = _.clone(options);
     return checkRequiredProperties(opts, ['host']).then(function () {
         return lastRequest = settlePromise(lastRequest).then(function () {
@@ -161,12 +161,12 @@ module.exports.GetPowerFlowRealtimeDataData = function (options) {
     })
 };
 
-module.exports.GetPowerMeterRealtimeData = function (options) {
+module.exports.GetMeterRealtimeData = function (options) {
     var opts = _.clone(options);
     opts.scope = "Device";
     return checkRequiredProperties(opts, ['host', 'deviceId']).then(function () {
         return lastRequest = settlePromise(lastRequest).then(function () {
-            return getRequest(opts, '/solar_api/v1/GetPowerMeterRealtimeData.fcgi').then(function (json) {
+            return getRequest(opts, '/solar_api/v1/GetMeterRealtimeData.cgi').then(function (json) {
                 return Promise.resolve(json);
             })
         })
@@ -178,7 +178,7 @@ module.exports.GetStorageRealtimeData = function (options) {
     opts.scope = "Device";
     return checkRequiredProperties(opts, ['host', 'deviceId']).then(function () {
         return lastRequest = settlePromise(lastRequest).then(function () {
-            return getRequest(opts, '/solar_api/v1/GetStorageRealtimeData.fcgi').then(function (json) {
+            return getRequest(opts, '/solar_api/v1/GetStorageRealtimeData.cgi').then(function (json) {
                 return Promise.resolve(json);
             })
         })
